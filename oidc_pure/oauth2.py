@@ -317,6 +317,9 @@ class OAuth2Flow:
 
             if "application/json" in content_type:
                 response_data = response.json()
+                # Validate response is a dict, not an array or other type
+                if not isinstance(response_data, dict):
+                    raise ValueError(f"Invalid token response type: {type(response_data).__name__}")
             elif "application/x-www-form-urlencoded" in content_type:
                 # GitHub OAuth retorna em formato form-urlencoded por padrão
                 from urllib.parse import parse_qs
@@ -329,6 +332,11 @@ class OAuth2Flow:
                     # Detectar pelo conteúdo
                     if response.text.strip().startswith("{"):
                         response_data = response.json()
+                        # Validate response is a dict
+                        if not isinstance(response_data, dict):
+                            raise ValueError(
+                                f"Invalid token response type: {type(response_data).__name__}"
+                            )
                     else:
                         from urllib.parse import parse_qs
 
@@ -434,6 +442,11 @@ class OAuth2Flow:
 
                 if "application/json" in content_type:
                     response_data = response.json()
+                    # Validate response is a dict, not an array or other type
+                    if not isinstance(response_data, dict):
+                        raise ValueError(
+                            f"Invalid token response type: {type(response_data).__name__}"
+                        )
                 elif "application/x-www-form-urlencoded" in content_type:
                     # GitHub OAuth retorna em formato form-urlencoded por padrão
                     from urllib.parse import parse_qs
@@ -446,6 +459,11 @@ class OAuth2Flow:
                         # Detectar pelo conteúdo
                         if response.text.strip().startswith("{"):
                             response_data = response.json()
+                            # Validate response is a dict
+                            if not isinstance(response_data, dict):
+                                raise ValueError(
+                                    f"Invalid token response type: {type(response_data).__name__}"
+                                )
                         else:
                             from urllib.parse import parse_qs
 

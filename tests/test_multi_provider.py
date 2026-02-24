@@ -27,7 +27,7 @@ class TestMultiProviderConfig:
             "KEYCLOAK_CLIENT_ID": "cartorio",
             "KEYCLOAK_CLIENT_SECRET": "test-secret",
             "KEYCLOAK_REDIRECT_URI": "http://localhost:5400/callback",
-            "KEYCLOAK_SCOPES": "openid profile email tjdft_profile",
+            "KEYCLOAK_SCOPES": "openid profile email",
         }
 
         with patch.dict(os.environ, env_vars, clear=True):
@@ -37,7 +37,7 @@ class TestMultiProviderConfig:
             assert config.client_id == "cartorio"
             assert config.client_secret == "test-secret"
             assert config.redirect_uri == "http://localhost:5400/callback"
-            assert config.scopes == "openid profile email tjdft_profile"
+            assert config.scopes == "openid profile email"
             assert config.use_pkce is True
             assert config.verify_ssl is True
 
@@ -426,22 +426,22 @@ class TestRealWorldScenarios:
             assert call_g["client_id"] == "google-client"
 
     def test_keycloak_with_custom_scope(self):
-        """Testa Keycloak com scope customizado (tjdft_profile)."""
+        """Testa Keycloak com scope customizado (custom_profile)."""
         env_vars = {
             "KEYCLOAK_ISSUER_URL": "https://sso.apps.alcoal.net.br/auth/realms/SUDES",
             "KEYCLOAK_CLIENT_ID": "cartorio",
             "KEYCLOAK_CLIENT_SECRET": "test-secret",
             "KEYCLOAK_REDIRECT_URI": "http://localhost:5400/callback",
-            "KEYCLOAK_SCOPES": "openid profile email tjdft_profile",
+            "KEYCLOAK_SCOPES": "openid profile email custom_profile",
         }
 
         with patch.dict(os.environ, env_vars, clear=True):
             config = get_oidc_config("keycloak")
 
-            assert "tjdft_profile" in config.scopes
+            assert "custom_profile" in config.scopes
 
     def test_google_without_custom_scope(self):
-        """Testa Google com scopes padrão (sem tjdft_profile)."""
+        """Testa Google com scopes padrão (sem custom_profile)."""
         env_vars = {
             "GOOGLE_ISSUER_URL": "https://accounts.google.com",
             "GOOGLE_CLIENT_ID": "test-client",
@@ -453,7 +453,7 @@ class TestRealWorldScenarios:
         with patch.dict(os.environ, env_vars, clear=True):
             config = get_oidc_config("google")
 
-            assert "tjdft_profile" not in config.scopes
+            assert "custom_profile" not in config.scopes
             assert "openid" in config.scopes
 
     def test_unified_port_configuration(self):
