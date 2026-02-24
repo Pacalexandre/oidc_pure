@@ -17,13 +17,24 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
-## [1.1.1] - 2026-02-24
+## [1.1.2] - 2026-02-24
 
 ### 🐛 Bug Fixes
 
 #### CI/CD
-- **Fix workflow installation test**: Corrigido teste de instalação no workflow de release que falhava ao importar o pacote do código fonte local em vez do pacote instalado
-- Teste agora muda para `/tmp` antes de importar, evitando conflitos com código fonte
+- **Fix workflow installation test (segunda tentativa)**: Corrigido teste usando caminho absoluto do Python do venv antes de mudar para /tmp
+- Substituído `uv venv` por `python -m venv` para compatibilidade
+- Captura do caminho do Python do venv com `$PWD` antes de mudar diretório
+
+---
+
+## [1.1.1] - 2026-02-24 [YANKED]
+
+### 🐛 Bug Fixes (tentativa malsucedida)
+
+#### CI/CD
+- Tentativa de corrigir teste de instalação mudando para /tmp, mas ainda apresentou erro
+- Esta versão foi marcada como yanked devido à falha no workflow
 
 ---
 
@@ -168,6 +179,7 @@ Este projeto segue o [Semantic Versioning](https://semver.org/):
 
 ### Links
 
-[Unreleased]: https://github.com/Pacalexandre/oidc_pure/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/Pacalexandre/oidc_pure/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/Pacalexandre/oidc_pure/compare/v1.1.0...v1.1.2
 [1.1.1]: https://github.com/Pacalexandre/oidc_pure/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Pacalexandre/oidc_pure/releases/tag/v1.1.0

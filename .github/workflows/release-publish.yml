@@ -95,12 +95,11 @@ jobs:
       - name: Test installation
         run: |
           # Create a fresh venv and test installation
-          uv venv test-env
-          source test-env/bin/activate
-          pip install dist/*.whl
-          # Change to temp directory to avoid importing local source code
-          cd /tmp
-          python -c "import oidc_pure; print(f'✅ Successfully imported oidc_pure v{oidc_pure.__version__}')"
+          python -m venv test-env
+          test-env/bin/pip install dist/*.whl
+          # Test import from /tmp to avoid importing local source code
+          VENV_PYTHON="$PWD/test-env/bin/python"
+          cd /tmp && "$VENV_PYTHON" -c "import oidc_pure; print(f'✅ Successfully imported oidc_pure v{oidc_pure.__version__}')"
       
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
