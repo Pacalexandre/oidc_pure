@@ -27,18 +27,18 @@
   - **Major** (X.0.0): Breaking changes
 - [x] Atualizar versão no `pyproject.toml`
 - [x] Atualizar `__version__` em `oidc_pure/__init__.py` (se diferente)
-- [ ] Criar/atualizar `CHANGELOG.md` com as mudanças da versão
+- [x] Criar/atualizar `CHANGELOG.md` com as mudanças da versão
 - [ ] Verificar e atualizar dependências se necessário
 
 ### Validação Local
-- [ ] Build local bem-sucedido (`./build_package.sh`)
-- [ ] Instalação local testada (`pip install dist/*.whl`)
-- [ ] Imports funcionando (`python -c "import oidc_pure"`)
+- [x] Build local bem-sucedido (`./build_package.sh`)
+- [x] Instalação local testada (`pip install dist/*.whl`)
+- [x] Imports funcionando (`python -c "import oidc_pure"`)
 - [ ] Testar examples/ com a versão local
 - [ ] Verificar metadados do pacote (`pip show oidc_pure`)
 
 ### Git e GitHub
-- [ ] Branch está atualizada com `main`
+- [x] Branch está atualizada com `main`
 - [ ] Não há commits pendentes
 - [ ] Não há conflitos
 - [ ] Todos os workflows estão passando no GitHub Actions
