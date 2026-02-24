@@ -17,6 +17,16 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [1.1.1] - 2026-02-24
+
+### 🐛 Bug Fixes
+
+#### CI/CD
+- **Fix workflow installation test**: Corrigido teste de instalação no workflow de release que falhava ao importar o pacote do código fonte local em vez do pacote instalado
+- Teste agora muda para `/tmp` antes de importar, evitando conflitos com código fonte
+
+---
+
 ## [1.1.0] - 2026-02-24
 
 ### 🎉 Primeiro Release Público
@@ -158,5 +168,6 @@ Este projeto segue o [Semantic Versioning](https://semver.org/):
 
 ### Links
 
-[Unreleased]: https://github.com/Pacalexandre/oidc_pure/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/Pacalexandre/oidc_pure/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/Pacalexandre/oidc_pure/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Pacalexandre/oidc_pure/releases/tag/v1.1.0

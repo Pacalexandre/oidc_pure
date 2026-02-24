@@ -98,6 +98,8 @@ jobs:
           uv venv test-env
           source test-env/bin/activate
           pip install dist/*.whl
+          # Change to temp directory to avoid importing local source code
+          cd /tmp
           python -c "import oidc_pure; print(f'✅ Successfully imported oidc_pure v{oidc_pure.__version__}')"
       
       - name: Upload build artifacts
