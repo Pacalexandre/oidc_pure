@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    image: python_oidc_pure
+    container_name: python_oidc_pure
+    volumes:
+      - ..:/workspace:cached
+    env_file:
+      - ../.env
+    command: sleep infinity

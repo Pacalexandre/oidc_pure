@@ -1,11 +1,13 @@
 # OIDC Pure - Manual Completo
 
-[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.12-3.14](https://img.shields.io/badge/python-3.12--3.14-blue.svg)](https://www.python.org/downloads/)
+[![Dev Container](https://img.shields.io/badge/Dev_Container-Enabled-blue?logo=docker)](https://code.visualstudio.com/docs/devcontainers/containers)
 [![RFC 6749](https://img.shields.io/badge/RFC-6749-green.svg)](https://datatracker.ietf.org/doc/html/rfc6749)
 [![OIDC](https://img.shields.io/badge/OpenID-Connect-orange.svg)](https://openid.net/connect/)
 [![Coverage](https://img.shields.io/badge/coverage-78%25-brightgreen.svg)]()
 [![Security](https://img.shields.io/badge/security-audited-brightgreen.svg)](SECURITY.md)
 [![Dependencies](https://img.shields.io/badge/dependencies-0_CVEs-brightgreen.svg)]()
+
 
 Implementação pura em Python de OAuth2 (RFC 6749) e OpenID Connect para Keycloak e outros provedores de identidade. Sistema multi-provider genérico com suporte a Google, GitHub, Microsoft, Okta, Auth0 e qualquer provedor OIDC compatível.
 
@@ -61,7 +63,7 @@ Implementação pura em Python de OAuth2 (RFC 6749) e OpenID Connect para Keyclo
 ### 1.3 Estrutura do Projeto
 
 ```
-oidc-pure/
+oidc_pure/
 ├── oidc/                          # 📦 Biblioteca Principal
 │   ├── __init__.py                # API pública
 │   ├── client.py                  # OIDCClient (interface principal)
@@ -109,8 +111,8 @@ oidc-pure/
 
 ```bash
 # Clonar repositório
-git clone https://github.com/seu-usuario/oidc-pure.git
-cd oidc-pure
+git clone https://github.com/seu-usuario/oidc_pure.git
+cd oidc_pure
 
 # Instalar dependências
 uv sync
@@ -128,14 +130,14 @@ source .venv/bin/activate  # Linux/Mac
 pip install -e .
 
 # Do Git
-pip install git+https://github.com/seu-usuario/oidc-pure.git
+pip install git+https://github.com/seu-usuario/oidc_pure.git
 ```
 
 ### 2.4 Instalação em Modo Desenvolvimento
 
 ```bash
 # Para desenvolvimento ativo
-cd /caminho/para/oidc-pure
+cd /caminho/para/oidc_pure
 pip install -e .
 ```
 
@@ -146,7 +148,7 @@ pip install -e .
 O diretório `oidc/` contém a biblioteca principal e é **obrigatório** para uso em produção:
 
 ```python
-from oidc import OIDCClient
+from oidc_pure import OIDCClient
 
 # Uso direto da biblioteca core
 client = OIDCClient(
@@ -231,7 +233,7 @@ OIDC_TOKEN_LEEWAY=60
 # =============================================================================
 # KEYCLOAK (TJDFT)
 # =============================================================================
-KEYCLOAK_ISSUER_URL=https://sso.apps.tjdft.jus.br/auth/realms/SUDES
+KEYCLOAK_ISSUER_URL=https://sso.apps.alcoal.net.br/auth/realms/SUDES
 KEYCLOAK_CLIENT_ID=seu-client-id
 KEYCLOAK_CLIENT_SECRET=seu-client-secret
 KEYCLOAK_REDIRECT_URI=http://localhost:5400/callback
@@ -328,7 +330,7 @@ for provider in ['keycloak', 'google', 'github']:
 ### 4.1 Exemplo Mínimo
 
 ```python
-from oidc import OIDCClient
+from oidc_pure import OIDCClient
 
 # 1. Inicializar cliente (discovery automático)
 client = OIDCClient(
@@ -361,7 +363,7 @@ print(f"Email: {user_info.email}")
 ### 4.2 Client Credentials Flow
 
 ```python
-from oidc import OIDCClient
+from oidc_pure import OIDCClient
 
 # Para autenticação machine-to-machine
 client = OIDCClient(
@@ -404,7 +406,7 @@ claims = client.validate_token(
 
 ```python
 import asyncio
-from oidc import OIDCClient
+from oidc_pure import OIDCClient
 
 async def main():
     client = OIDCClient(
@@ -444,7 +446,7 @@ asyncio.run(main())
 """Exemplo: Servidor web com callback OAuth"""
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import webbrowser
-from oidc import OIDCClient
+from oidc_pure import OIDCClient
 
 # Configuração
 CLIENT = OIDCClient(
@@ -498,7 +500,7 @@ if __name__ == "__main__":
 ```python
 """Exemplo: Integração com Flask"""
 from flask import Flask, redirect, request, session
-from oidc import OIDCClient
+from oidc_pure import OIDCClient
 import secrets
 
 app = Flask(__name__)
@@ -645,7 +647,7 @@ MIDDLEWARE = [
 # views.py
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from oidc import OIDCClient
+from oidc_pure import OIDCClient
 
 oidc_client = OIDCClient(
     issuer_url=settings.OIDC_ISSUER_URL,
@@ -725,7 +727,7 @@ REST_FRAMEWORK = {
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.models import User
-from oidc import OIDCClient
+from oidc_pure import OIDCClient
 
 class OIDCAuthentication(BaseAuthentication):
     """
@@ -892,7 +894,7 @@ A biblioteca é dividida em:
 
 ```python
 # Produção: Uso direto (sem oidc_config.py)
-from oidc import OIDCClient
+from oidc_pure import OIDCClient
 client = OIDCClient(issuer_url="...", client_id="...", ...)
 
 # Desenvolvimento: Com helper multi-provider
@@ -1026,10 +1028,10 @@ token = client.client_credentials_grant()
 uv run pytest
 
 # Com cobertura
-uv run pytest --cov=oidc --cov-report=term-missing
+uv run pytest --cov=oidc_pure --cov-report=term-missing
 
 # HTML report
-uv run pytest --cov=oidc --cov-report=html
+uv run pytest --cov=oidc_pure --cov-report=html
 
 # Específicos
 uv run pytest tests/test_multi_provider.py -v
