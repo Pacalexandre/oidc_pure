@@ -17,6 +17,58 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [1.1.4] - 2026-02-24
+
+### ✨ Improvements
+
+#### Testing Coverage
+- **Cobertura geral aumentada de 89% → 99%** (+10 pontos percentuais)
+- **Total de testes: 173 → 213** (+40 novos testes)
+- **6 de 7 módulos agora com 100% de cobertura**
+
+#### Novos Testes - models.py (100% coverage)
+- **+22 testes abrangentes** para modelos de dados
+- Testes para `OIDCConfig`, `TokenResponse`, `UserInfo`, `JWK`, `JWKSet`
+- Cobertura de formatos OIDC padrão e provider-específicos (GitHub)
+- Testes de fallback mechanisms e edge cases
+- Validação de mapeamento de claims não-OIDC
+- **models.py: 86% → 100%** (+14%)
+
+#### Novos Testes - tokens.py (100% coverage)
+- **+18 testes de validação JWT e PKCE**
+- Testes para todos os algoritmos HMAC (HS256, HS384, HS512)
+- Validação de algoritmos não suportados (RS256, ES256, none)
+- Testes de assinaturas inválidas e adulteradas
+- Validação de claims (issuer, audience, exp, nbf, iat)
+- Testes de PKCE com comprimentos inválidos
+- Método `extract_claims()` testado
+- **tokens.py: 87% → 100%** (+13%)
+
+#### Code Quality
+- **Ruff linting**: All checks passed (zero erros)
+- **Type hints**: Tipagem completa em todos os módulos
+- **Test organization**: Classes de teste bem organizadas por funcionalidade
+
+#### Documentation
+- **README atualizado** com estatísticas de cobertura atualizadas
+- Tabela de cobertura por módulo atualizada
+- Status dos testes refletindo 99% de cobertura
+
+### 📊 Test Coverage Summary
+
+| Módulo | Antes | Depois | Tests |
+|--------|-------|--------|-------|
+| `__init__.py` | 100% | 100% | - |
+| `exceptions.py` | 100% | 100% | - |
+| `discovery.py` | 100% | 100% | 25 |
+| `client.py` | 100% | 100% | 24 |
+| `models.py` | **86%** | **100%** ✅ | **22** |
+| `tokens.py` | **87%** | **100%** ✅ | **30** |
+| `oauth2.py` | 97% | 97% | 86 |
+| **TOTAL** | **89%** | **99%** | **213** |
+
+---
+
 ## [1.1.3] - 2026-02-24
 
 ### ✨ Improvements

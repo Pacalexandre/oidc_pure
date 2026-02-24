@@ -21,7 +21,7 @@ from oidc_pure.exceptions import (
 )
 from oidc_pure.models import OIDCConfig, TokenResponse, UserInfo
 
-__version__ = "1.1.3"
+__version__ = "1.1.4"
 __all__ = [
     "OIDCClient",
     "OIDCError",
