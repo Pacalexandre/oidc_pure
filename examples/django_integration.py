@@ -463,13 +463,13 @@ from myapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+
     # Rotas OIDC
     path('auth/login', views.oidc_login, name='oidc_login'),
     path('auth/callback', views.oidc_callback, name='oidc_callback'),
     path('auth/logout', views.oidc_logout, name='oidc_logout'),
     path('auth/me', views.user_profile, name='user_profile'),
-    
+
     # Rotas protegidas (exemplo)
     path('protected', views.protected_view, name='protected'),
     path('', views.home, name='home'),  # Sua página inicial
@@ -500,12 +500,12 @@ class OIDCUserProfile(models.Model):
     token_expires_at = models.DateTimeField(null=True, blank=True)
     last_login = models.DateTimeField(auto_now=True)
     extra_data = models.JSONField(default=dict, blank=True)  # Claims adicionais
-    
+
     class Meta:
         db_table = 'oidc_user_profile'
         verbose_name = 'OIDC User Profile'
         verbose_name_plural = 'OIDC User Profiles'
-    
+
     def __str__(self):
         return f"{self.user.username} ({self.provider})"
 """
@@ -564,7 +564,7 @@ class OIDCUserProfile(models.Model):
 
 2. Configure CORS corretamente:
    pip install django-cors-headers
-   
+
 3. Use cache/Redis para sessões:
    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
    CACHES = {

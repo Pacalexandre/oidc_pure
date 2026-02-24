@@ -9,19 +9,15 @@ Script interativo para testar autenticação:
 - Porta unificada: 5400
 """
 
-import asyncio
-import json
-import time
 import threading
+import time
 import webbrowser
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
 from dataclasses import asdict
 from datetime import datetime
-from typing import Optional
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import parse_qs, urlparse
 
 from oidc_config import create_oidc_client, get_oidc_config, list_available_providers
-
 
 # ──────────────────────────────────────────────────────────────────────────
 # CALLBACK SERVER
@@ -59,7 +55,7 @@ class CallbackHandler(BaseHTTPRequestHandler):
         params = parse_qs(parsed.query)
 
         # DEBUG: Mostrar o que foi recebido
-        print(f"\n🔍 DEBUG - Callback recebido:")
+        print("\n🔍 DEBUG - Callback recebido:")
         print(f"   Path completo: {self.path}")
         print(f"   Query params: {dict(params)}")
 
@@ -229,7 +225,7 @@ def decode_and_display_token(client, token_string: str, token_type: str = "Token
         # Mostrar outros claims (até 5)
         other_claims = {k: v for k, v in claims.items() if k not in important_claims}
         if other_claims:
-            print(f"\n   Outros claims:")
+            print("\n   Outros claims:")
             for claim, value in list(other_claims.items())[:5]:
                 value_str = str(value)
                 if len(value_str) > 60:
@@ -264,7 +260,7 @@ def validate_and_display_tokens(client, token, provider: str):
         if len(parts) == 3:  # É um JWT
             decode_and_display_token(client, token.access_token, "Access Token")
         else:
-            print(f"\n   ℹ️  Access Token é opaco (não é JWT)")
+            print("\n   ℹ️  Access Token é opaco (não é JWT)")
             print(f"   Token: {token.access_token[:50]}...")
 
 
@@ -316,21 +312,21 @@ def test_provider(provider: str) -> bool:
         port = parsed_uri.port or 5400
         print(f"\n🔍 Porta configurada: {port}")
         print(f"   ⚠️  IMPORTANTE: O redirect URI '{config.redirect_uri}'")
-        print(f"      deve estar registrado exatamente assim no provedor!")
+        print("      deve estar registrado exatamente assim no provedor!")
 
         # Criar cliente OIDC
-        print(f"\n🔧 Criando cliente OIDC...")
+        print("\n🔧 Criando cliente OIDC...")
         client = create_oidc_client(provider)
-        print(f"   ✅ Cliente criado")
+        print("   ✅ Cliente criado")
 
         # Iniciar servidor de callback
         print(f"\n🌐 Iniciando servidor de callback na porta {port}...")
         try:
             server = HTTPServer(("localhost", port), CallbackHandler)
-            print(f"   ✅ Servidor iniciado")
-        except OSError as e:
+            print("   ✅ Servidor iniciado")
+        except OSError:
             print(f"   ❌ Erro: Porta {port} já está em uso")
-            print(f"\n💡 Solução: Execute o comando abaixo para liberar a porta:")
+            print("\n💡 Solução: Execute o comando abaixo para liberar a porta:")
             print(f"   kill -9 $(lsof -ti:{port})")
             return False
 
@@ -339,19 +335,19 @@ def test_provider(provider: str) -> bool:
         thread.start()
 
         # Gerar URL de autorização
-        print(f"\n🔑 Gerando URL de autorização...")
+        print("\n🔑 Gerando URL de autorização...")
         auth_url, state, verifier = client.get_authorization_url()
-        print(f"   ✅ URL gerada")
+        print("   ✅ URL gerada")
         print(f"   State: {state[:30]}...")
         if verifier:
             print(f"   Code Verifier: {verifier[:30]}...")
 
         # DEBUG: Mostrar URL completa (primeiros 150 caracteres)
-        print(f"\n🔍 DEBUG - URL de autorização:")
+        print("\n🔍 DEBUG - URL de autorização:")
         print(f"   {auth_url[:150]}...")
 
         # Abrir navegador
-        print(f"\n🌐 Abrindo navegador para autenticação...")
+        print("\n🌐 Abrindo navegador para autenticação...")
         print("\n" + "━" * 70)
         print("👉 FAÇA LOGIN NO NAVEGADOR QUE SERÁ ABERTO")
         print("   (Se o navegador não abrir, copie a URL acima)")
@@ -360,7 +356,7 @@ def test_provider(provider: str) -> bool:
         webbrowser.open(auth_url)
 
         # Aguardar callback (timeout de 120 segundos)
-        print(f"\n⏳ Aguardando autenticação...")
+        print("\n⏳ Aguardando autenticação...")
 
         for i in range(120):
             if callback_data["received"]:
@@ -373,7 +369,7 @@ def test_provider(provider: str) -> bool:
         server.shutdown()
 
         # DEBUG: Mostrar estado do callback após espera
-        print(f"\n🔍 DEBUG - Estado do callback:")
+        print("\n🔍 DEBUG - Estado do callback:")
         print(f"   Received: {callback_data['received']}")
         print(f"   Code: {callback_data['code'][:30] if callback_data['code'] else 'None'}...")
         print(f"   State: {callback_data['state'][:30] if callback_data['state'] else 'None'}...")
@@ -385,7 +381,7 @@ def test_provider(provider: str) -> bool:
             print("\n❌ Timeout - callback não foi recebido após 120s")
             print("\n💡 Verifique:")
             print(f"   - O Redirect URI '{config.redirect_uri}' está registrado no provedor")
-            print(f"   - Você completou o login no navegador")
+            print("   - Você completou o login no navegador")
             return False
 
         # Verificar erros
@@ -399,29 +395,29 @@ def test_provider(provider: str) -> bool:
         if not callback_data["code"]:
             print("\n❌ Código de autorização não foi recebido")
             print("\n💡 POSSÍVEIS CAUSAS:")
-            print(f"   1. O Redirect URI não está registrado corretamente no provedor")
+            print("   1. O Redirect URI não está registrado corretamente no provedor")
             print(f"      Esperado: {config.redirect_uri}")
-            print(f"   2. Você negou a autorização no navegador")
-            print(f"   3. O provedor está retornando erro (verifique navegador)")
-            print(f"   4. Problema de rede ou firewall")
+            print("   2. Você negou a autorização no navegador")
+            print("   3. O provedor está retornando erro (verifique navegador)")
+            print("   4. Problema de rede ou firewall")
             print(f"\n   Full path recebido: {callback_data.get('full_path', 'N/A')}")
             return False
 
-        print(f"\n✅ Callback recebido!")
+        print("\n✅ Callback recebido!")
         print(f"   Code: {callback_data['code'][:30]}...")
 
         # Trocar código por tokens
-        print(f"\n🎫 Trocando código de autorização por tokens...")
+        print("\n🎫 Trocando código de autorização por tokens...")
         callback_url = f"http://localhost:{port}{callback_data['full_path']}"
 
         token = client.handle_authorization_response(
             callback_url, expected_state=state, code_verifier=verifier
         )
 
-        print(f"   ✅ Tokens obtidos!")
+        print("   ✅ Tokens obtidos!")
 
         # Exibir informações dos tokens
-        print(f"\n   📊 INFORMAÇÕES DOS TOKENS:")
+        print("\n   📊 INFORMAÇÕES DOS TOKENS:")
         print("   " + "─" * 66)
         print(f"   Access Token:  {token.access_token[:50]}...")
         print(f"   Token Type:    {token.token_type}")
@@ -429,7 +425,7 @@ def test_provider(provider: str) -> bool:
         if token.expires_in:
             print(f"   Expires In:    {token.expires_in}s ({token.expires_in // 60} minutos)")
         else:
-            print(f"   Expires In:    N/A (provedor não informou)")
+            print("   Expires In:    N/A (provedor não informou)")
 
         if token.id_token:
             print(f"   ID Token:      {token.id_token[:50]}...")
@@ -444,12 +440,12 @@ def test_provider(provider: str) -> bool:
         validate_and_display_tokens(client, token, provider)
 
         # Obter informações do usuário
-        print(f"\n👤 Obtendo informações do usuário...")
+        print("\n👤 Obtendo informações do usuário...")
         user_info = client.get_user_info(token.access_token)
-        print(f"   ✅ Informações obtidas!")
+        print("   ✅ Informações obtidas!")
 
         # Exibir dados do usuário
-        print(f"\n   📋 DADOS DO USUÁRIO AUTENTICADO:")
+        print("\n   📋 DADOS DO USUÁRIO AUTENTICADO:")
         print("   " + "─" * 66)
 
         # Converter UserInfo para dicionário
@@ -482,7 +478,7 @@ def test_provider(provider: str) -> bool:
             k: v for k, v in user_dict.items() if k not in user_fields and v is not None
         }
         if other_fields:
-            print(f"\n   Campos adicionais:")
+            print("\n   Campos adicionais:")
             for field, value in list(other_fields.items())[:5]:
                 value_str = str(value)
                 if len(value_str) > 50:
@@ -495,7 +491,7 @@ def test_provider(provider: str) -> bool:
         print("\n" + "=" * 70)
         print(f"  ✅ SUCESSO - {provider.upper()} AUTENTICADO!")
         print("=" * 70)
-        print(f"\n📊 Resumo:")
+        print("\n📊 Resumo:")
         user_id = (
             user_dict.get("email")
             or user_dict.get("preferred_username")
@@ -504,7 +500,7 @@ def test_provider(provider: str) -> bool:
         print(f"   ✅ Usuário: {user_id}")
         if token.expires_in:
             print(f"   ✅ Token válido por: {token.expires_in}s ({token.expires_in // 60} min)")
-        print(f"   ✅ Tokens validados e decodificados com sucesso")
+        print("   ✅ Tokens validados e decodificados com sucesso")
         print(f"   ✅ Provedor: {provider.upper()}")
 
         return True

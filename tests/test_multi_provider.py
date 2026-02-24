@@ -232,7 +232,7 @@ class TestCreateOIDCClient:
         mock_client_class.return_value = mock_instance
 
         with patch.dict(os.environ, env_vars, clear=True):
-            client = create_oidc_client("google")
+            create_oidc_client("google")
 
             call_args = mock_client_class.call_args
 
@@ -254,7 +254,7 @@ class TestCreateOIDCClient:
         mock_client_class.return_value = mock_instance
 
         with patch.dict(os.environ, env_vars, clear=True):
-            client = create_oidc_client()  # Sem especificar provedor
+            create_oidc_client()  # Sem especificar provedor
 
             assert mock_client_class.called
 
@@ -416,12 +416,12 @@ class TestRealWorldScenarios:
 
         with patch.dict(os.environ, env_vars, clear=True):
             # Cliente Keycloak
-            client_kc = create_oidc_client("keycloak")
+            create_oidc_client("keycloak")
             call_kc = mock_client_class.call_args[1]
             assert call_kc["client_id"] == "cartorio"
 
             # Cliente Google
-            client_g = create_oidc_client("google")
+            create_oidc_client("google")
             call_g = mock_client_class.call_args[1]
             assert call_g["client_id"] == "google-client"
 

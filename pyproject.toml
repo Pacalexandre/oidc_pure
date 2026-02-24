@@ -157,3 +157,11 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W"]
 ignore = ["E501"]  # line too long (handled by formatter)
+
+[tool.ruff.lint.per-file-ignores]
+# Arquivos de exemplo podem ter imports após documentação
+"examples/*.py" = ["E402", "F811"]
+# Arquivo de teste manual pode ter algumas exceções
+"test_manual.py" = ["E722"]
+# Testes podem ter variáveis não usadas para mocks
+"tests/*.py" = ["F841"]

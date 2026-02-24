@@ -64,7 +64,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
     'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler',
-    
+
     # OpenAPI/Swagger (drf-spectacular)
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
@@ -658,11 +658,11 @@ router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+
     # API
     path('api/', include(router.urls)),
     path('api/protected', ProtectedAPIView.as_view(), name='protected'),
-    
+
     # OpenAPI/Swagger
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
@@ -691,7 +691,7 @@ def custom_exception_handler(exc, context):
     '''
     # Chamar handler padrão primeiro
     response = exception_handler(exc, context)
-    
+
     # Tratar exceções OIDC
     if isinstance(exc, OIDCException):
         logger.error(f"OIDC Exception: {exc}")
@@ -699,7 +699,7 @@ def custom_exception_handler(exc, context):
             {'error': str(exc), 'type': exc.__class__.__name__},
             status=status.HTTP_401_UNAUTHORIZED
         )
-    
+
     return response
 """
 
@@ -720,16 +720,16 @@ class OIDCAuthenticationTestCase(APITestCase):
     '''
     Testes para autenticação OIDC.
     '''
-    
+
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', email='test@example.com')
-    
+
     def test_protected_endpoint_without_token(self):
         '''Testa acesso a endpoint protegido sem token.'''
         response = self.client.get('/api/protected')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    
+
     @patch('api.authentication.OIDCClient')
     def test_protected_endpoint_with_valid_token(self, mock_oidc_client):
         '''Testa acesso a endpoint protegido com token válido.'''
@@ -738,24 +738,24 @@ class OIDCAuthenticationTestCase(APITestCase):
         mock_userinfo.sub = 'testuser'
         mock_userinfo.email = 'test@example.com'
         mock_oidc_client.return_value.get_userinfo.return_value = mock_userinfo
-        
+
         # Fazer requisição com token
         self.client.credentials(HTTP_AUTHORIZATION='Bearer valid_token')
         response = self.client.get('/api/protected')
-        
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-    
+
     @patch('api.authentication.OIDCClient')
     def test_protected_endpoint_with_invalid_token(self, mock_oidc_client):
         '''Testa acesso a endpoint protegido com token inválido.'''
         # Mock erro de validação
         from oidc_pure.exceptions import TokenError
         mock_oidc_client.return_value.get_userinfo.side_effect = TokenError('Token inválido')
-        
+
         # Fazer requisição com token inválido
         self.client.credentials(HTTP_AUTHORIZATION='Bearer invalid_token')
         response = self.client.get('/api/protected')
-        
+
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 """
 
@@ -824,14 +824,14 @@ class OIDCAuthenticationTestCase(APITestCase):
 
 2. Rate limiting:
    pip install django-ratelimit
-   
+
    @ratelimit(key='ip', rate='5/m', method='POST')
    def token(self, request):
        ...
 
 3. CORS:
    pip install django-cors-headers
-   
+
    CORS_ALLOWED_ORIGINS = [
        "https://frontend.example.com",
    ]
@@ -855,7 +855,7 @@ class OIDCAuthenticationTestCase(APITestCase):
 
 3. Load tests:
    pip install locust
-   
+
    # Testar performance com muitas requisições simultâneas
 """
 

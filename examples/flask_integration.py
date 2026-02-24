@@ -108,8 +108,8 @@ def profile():
             <li><strong>Subject:</strong> {user_info.sub}</li>
         </ul>
         <p>
-            <a href="/api/me">View JSON</a> | 
-            <a href="/refresh">Refresh Token</a> | 
+            <a href="/api/me">View JSON</a> |
+            <a href="/refresh">Refresh Token</a> |
             <a href="/logout">Logout</a>
         </p>
         """
