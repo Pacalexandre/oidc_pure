@@ -17,6 +17,32 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [1.1.3] - 2026-02-24
+
+### ✨ Improvements
+
+#### Testing
+- **+19 testes de edge cases**: Testes abrangentes para respostas malformadas e vazias
+  - Testes para campos obrigatórios ausentes (access_token, token_type)
+  - Testes para respostas vazias, whitespace, null JSON
+  - Testes para tipos JSON inválidos (arrays, syntax errors)
+  - Testes para content-types errados (HTML, XML, binary)
+  - Testes para casos extremos (tokens grandes, unicode, BOM)
+  - Testes para form-urlencoded malformado
+  - Total: **142 testes** (86 no módulo oauth2)
+  - **Cobertura aumentada**: oauth2.py de 95% → 97%
+
+#### Code Quality
+- **Validação de tipo JSON**: Adiciona verificação `isinstance(response_data, dict)` para prevenir TypeError com JSON arrays
+- **Melhor tratamento de erros**: Mensagens de erro mais claras indicando tipo de problema
+
+#### CI/CD
+- **Fix GitHub Actions deprecated**: Substituído `actions/create-release@v1` e `actions/upload-release-asset@v1` por `softprops/action-gh-release@v2`
+- **Workflow simplificado**: Upload de múltiplos arquivos em um único step com glob patterns
+- **Sem warnings**: Elimina avisos de deprecation do GitHub Actions
+
+---
+
 ## [1.1.2] - 2026-02-24
 
 ### 🐛 Bug Fixes
