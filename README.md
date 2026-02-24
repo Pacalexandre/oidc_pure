@@ -1,13 +1,17 @@
 # OIDC Pure - Manual Completo
 
+[![PyPI version](https://img.shields.io/pypi/v/oidc_pure)](https://pypi.org/project/oidc_pure/)
 [![Python 3.12-3.14](https://img.shields.io/badge/python-3.12--3.14-blue.svg)](https://www.python.org/downloads/)
-[![Dev Container](https://img.shields.io/badge/Dev_Container-Enabled-blue?logo=docker)](https://code.visualstudio.com/docs/devcontainers/containers)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/oidc_pure)](https://pypi.org/project/oidc_pure/)
+[![License](https://img.shields.io/github/license/Pacalexandre/oidc_pure)](LICENSE)
+
+[![CI](https://github.com/Pacalexandre/oidc_pure/workflows/CI%20-%20Tests%20and%20Validation/badge.svg)](https://github.com/Pacalexandre/oidc_pure/actions/workflows/ci.yml)
+[![Security Audit](https://github.com/Pacalexandre/oidc_pure/workflows/Security%20Audit/badge.svg)](https://github.com/Pacalexandre/oidc_pure/actions/workflows/security.yml)
+[![codecov](https://codecov.io/gh/Pacalexandre/oidc_pure/branch/main/graph/badge.svg)](https://codecov.io/gh/Pacalexandre/oidc_pure)
+
 [![RFC 6749](https://img.shields.io/badge/RFC-6749-green.svg)](https://datatracker.ietf.org/doc/html/rfc6749)
 [![OIDC](https://img.shields.io/badge/OpenID-Connect-orange.svg)](https://openid.net/connect/)
-[![Coverage](https://img.shields.io/badge/coverage-78%25-brightgreen.svg)]()
-[![Security](https://img.shields.io/badge/security-audited-brightgreen.svg)](SECURITY.md)
-[![Dependencies](https://img.shields.io/badge/dependencies-0_CVEs-brightgreen.svg)]()
-
+[![Dev Container](https://img.shields.io/badge/Dev_Container-Enabled-blue?logo=docker)](https://code.visualstudio.com/docs/devcontainers/containers)
 
 Implementação pura em Python de OAuth2 (RFC 6749) e OpenID Connect para Keycloak e outros provedores de identidade. Sistema multi-provider genérico com suporte a Google, GitHub, Microsoft, Okta, Auth0 e qualquer provedor OIDC compatível.
 

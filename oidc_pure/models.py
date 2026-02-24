@@ -38,9 +38,7 @@ class OIDCConfig:
                 "token_endpoint_auth_methods_supported", []
             ),
             claims_supported=data.get("claims_supported", []),
-            code_challenge_methods_supported=data.get(
-                "code_challenge_methods_supported", []
-            ),
+            code_challenge_methods_supported=data.get("code_challenge_methods_supported", []),
         )
 
 
@@ -85,10 +83,10 @@ class UserInfo:
     def from_dict(cls, data: dict[str, Any]) -> "UserInfo":
         """
         Create UserInfo from userinfo endpoint response.
-        
+
         Suporta tanto o formato OIDC padrão quanto providers OAuth2 puros
         como GitHub, que usam estruturas diferentes.
-        
+
         Mapeamentos:
         - GitHub 'id' -> OIDC 'sub'
         - GitHub 'login' -> OIDC 'preferred_username'
@@ -103,26 +101,26 @@ class UserInfo:
             "email_verified",
             "preferred_username",
         }
-        
+
         # Separate known and unknown claims
         known = {k: v for k, v in data.items() if k in known_fields}
         unknown = {k: v for k, v in data.items() if k not in known_fields}
-        
+
         # Mapear campos de providers não-OIDC (GitHub, etc)
         # GitHub usa 'id' ao invés de 'sub'
         if "sub" not in known and "id" in data:
             known["sub"] = str(data["id"])
             unknown.pop("id", None)
-        
+
         # GitHub usa 'login' ao invés de 'preferred_username'
         if "preferred_username" not in known and "login" in data:
             known["preferred_username"] = data["login"]
             unknown.pop("login", None)
-        
+
         # Se ainda não tem 'sub', usar email ou login como fallback
         if "sub" not in known:
             known["sub"] = known.get("email") or known.get("preferred_username") or "unknown"
-        
+
         return cls(
             sub=known["sub"],
             name=known.get("name"),
