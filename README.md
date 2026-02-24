@@ -1,9 +1,12 @@
 # OIDC Pure - Manual Completo
 
 [![PyPI version](https://img.shields.io/pypi/v/oidc_pure)](https://pypi.org/project/oidc_pure/)
-[![Python 3.12-3.14](https://img.shields.io/badge/python-3.12--3.14-blue.svg)](https://www.python.org/downloads/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/oidc_pure)](https://pypi.org/project/oidc_pure/)
+[![Python 3.12-3.14](https://img.shields.io/badge/python-3.12--3.14-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/github/license/Pacalexandre/oidc_pure)](LICENSE)
+
+[![GitHub release](https://img.shields.io/github/v/release/Pacalexandre/oidc_pure)](https://github.com/Pacalexandre/oidc_pure/releases)
+[![GitHub downloads](https://img.shields.io/github/downloads/Pacalexandre/oidc_pure/total)](https://github.com/Pacalexandre/oidc_pure/releases)
 
 [![CI](https://github.com/Pacalexandre/oidc_pure/workflows/CI%20-%20Tests%20and%20Validation/badge.svg)](https://github.com/Pacalexandre/oidc_pure/actions/workflows/ci.yml)
 [![Security Audit](https://github.com/Pacalexandre/oidc_pure/workflows/Security%20Audit/badge.svg)](https://github.com/Pacalexandre/oidc_pure/actions/workflows/security.yml)
