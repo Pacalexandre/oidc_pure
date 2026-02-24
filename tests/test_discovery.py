@@ -9,6 +9,148 @@ from oidc_pure.exceptions import DiscoveryError, NetworkError
 from oidc_pure.models import OIDCConfig
 
 
+@pytest.mark.asyncio
+class TestOIDCDiscoveryAsync:
+    """Tests for OIDCDiscovery async methods."""
+
+    @respx.mock
+    async def test_discover_async_success(
+        self, mock_issuer_url: str, mock_discovery_response: dict
+    ):
+        """Test successful async OIDC discovery."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(
+            return_value=httpx.Response(200, json=mock_discovery_response)
+        )
+
+        discovery = OIDCDiscovery()
+        config = await discovery.discover_async(mock_issuer_url)
+
+        assert isinstance(config, OIDCConfig)
+        assert config.issuer == mock_issuer_url
+        assert config.authorization_endpoint == mock_discovery_response["authorization_endpoint"]
+        assert config.token_endpoint == mock_discovery_response["token_endpoint"]
+        assert config.userinfo_endpoint == mock_discovery_response["userinfo_endpoint"]
+        assert config.jwks_uri == mock_discovery_response["jwks_uri"]
+
+    @respx.mock
+    async def test_discover_async_trailing_slash(
+        self, mock_issuer_url: str, mock_discovery_response: dict
+    ):
+        """Test async discovery with trailing slash in issuer URL."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(
+            return_value=httpx.Response(200, json=mock_discovery_response)
+        )
+
+        discovery = OIDCDiscovery()
+        config = await discovery.discover_async(f"{mock_issuer_url}/")
+
+        assert config.issuer == mock_issuer_url
+
+    @respx.mock
+    async def test_discover_async_missing_required_fields(self, mock_issuer_url: str):
+        """Test async discovery failure with missing required fields."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        incomplete_response = {"issuer": mock_issuer_url}
+        respx.get(discovery_url).mock(return_value=httpx.Response(200, json=incomplete_response))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(DiscoveryError, match="missing required fields"):
+            await discovery.discover_async(mock_issuer_url)
+
+    @respx.mock
+    async def test_discover_async_issuer_mismatch(
+        self, mock_issuer_url: str, mock_discovery_response: dict
+    ):
+        """Test async discovery failure with issuer mismatch."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        mock_discovery_response["issuer"] = "https://different-issuer.com"
+        respx.get(discovery_url).mock(
+            return_value=httpx.Response(200, json=mock_discovery_response)
+        )
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(DiscoveryError, match="Issuer mismatch"):
+            await discovery.discover_async(mock_issuer_url)
+
+    @respx.mock
+    async def test_discover_async_http_error(self, mock_issuer_url: str):
+        """Test async discovery failure with HTTP error (404)."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(return_value=httpx.Response(404))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(NetworkError, match="HTTP error"):
+            await discovery.discover_async(mock_issuer_url)
+
+    @respx.mock
+    async def test_discover_async_http_500_error(self, mock_issuer_url: str):
+        """Test async discovery failure with HTTP 500 error."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(return_value=httpx.Response(500))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(NetworkError, match="HTTP error"):
+            await discovery.discover_async(mock_issuer_url)
+
+    @respx.mock
+    async def test_discover_async_network_error(self, mock_issuer_url: str):
+        """Test async discovery failure with network connection error."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(side_effect=httpx.ConnectError("Connection failed"))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(NetworkError, match="Network error"):
+            await discovery.discover_async(mock_issuer_url)
+
+    @respx.mock
+    async def test_discover_async_timeout_error(self, mock_issuer_url: str):
+        """Test async discovery failure with timeout."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(side_effect=httpx.TimeoutException("Timeout"))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(NetworkError, match="Network error"):
+            await discovery.discover_async(mock_issuer_url)
+
+    @respx.mock
+    async def test_discover_async_invalid_json(self, mock_issuer_url: str):
+        """Test async discovery failure with invalid JSON response."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(return_value=httpx.Response(200, text="invalid json"))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(DiscoveryError, match="Invalid discovery response"):
+            await discovery.discover_async(mock_issuer_url)
+
+    @respx.mock
+    async def test_discover_async_empty_response(self, mock_issuer_url: str):
+        """Test async discovery failure with empty JSON response."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(return_value=httpx.Response(200, json={}))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(DiscoveryError, match="missing required fields"):
+            await discovery.discover_async(mock_issuer_url)
+
+    @respx.mock
+    async def test_discover_async_partial_fields(self, mock_issuer_url: str):
+        """Test async discovery with some required fields missing."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        partial_response = {
+            "issuer": mock_issuer_url,
+            "authorization_endpoint": "https://example.com/auth",
+            "token_endpoint": "https://example.com/token",
+            # Missing jwks_uri and userinfo_endpoint
+        }
+        respx.get(discovery_url).mock(return_value=httpx.Response(200, json=partial_response))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(DiscoveryError, match="missing required fields"):
+            await discovery.discover_async(mock_issuer_url)
+
+
 class TestOIDCDiscovery:
     """Tests for OIDCDiscovery class."""
 
@@ -116,3 +258,63 @@ class TestOIDCDiscovery:
 
         assert config.issuer == mock_issuer_url
         custom_client.close()
+
+    @respx.mock
+    def test_discover_http_500_error(self, mock_issuer_url: str):
+        """Test discovery failure with HTTP 500 error."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(return_value=httpx.Response(500))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(NetworkError, match="HTTP error"):
+            discovery.discover(mock_issuer_url)
+
+    @respx.mock
+    def test_discover_timeout_error(self, mock_issuer_url: str):
+        """Test discovery failure with timeout."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(side_effect=httpx.TimeoutException("Timeout"))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(NetworkError, match="Network error"):
+            discovery.discover(mock_issuer_url)
+
+    @respx.mock
+    def test_discover_empty_response(self, mock_issuer_url: str):
+        """Test discovery failure with empty JSON response."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(return_value=httpx.Response(200, json={}))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(DiscoveryError, match="missing required fields"):
+            discovery.discover(mock_issuer_url)
+
+    @respx.mock
+    def test_discover_partial_fields(self, mock_issuer_url: str):
+        """Test discovery with some required fields missing."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        partial_response = {
+            "issuer": mock_issuer_url,
+            "authorization_endpoint": "https://example.com/auth",
+            "token_endpoint": "https://example.com/token",
+            # Missing jwks_uri and userinfo_endpoint
+        }
+        respx.get(discovery_url).mock(return_value=httpx.Response(200, json=partial_response))
+
+        discovery = OIDCDiscovery()
+        with pytest.raises(DiscoveryError, match="missing required fields"):
+            discovery.discover(mock_issuer_url)
+
+    @respx.mock
+    def test_discover_with_context_manager(
+        self, mock_issuer_url: str, mock_discovery_response: dict
+    ):
+        """Test discovery using context manager."""
+        discovery_url = f"{mock_issuer_url}/.well-known/openid-configuration"
+        respx.get(discovery_url).mock(
+            return_value=httpx.Response(200, json=mock_discovery_response)
+        )
+
+        with OIDCDiscovery() as discovery:
+            config = discovery.discover(mock_issuer_url)
+            assert config.issuer == mock_issuer_url
