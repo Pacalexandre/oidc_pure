@@ -54,7 +54,7 @@ Implementação pura em Python de OAuth2 (RFC 6749) e OpenID Connect para Keyclo
 
 | Provedor | Status | Porta | Scopes | Notas |
 |----------|--------|-------|--------|-------|
-| **Keycloak** | ✅ Testado | 5400 | `openid profile email tjdft_profile` | OIDC completo |
+| **Keycloak** | ✅ Testado | 5400 | `openid profile email` | OIDC completo |
 | **Google OAuth** | ✅ Testado | 5400 | `openid profile email` | OIDC completo |
 | **GitHub OAuth** | ✅ Testado | 5400 | `user:email read:user` | OAuth2 puro* |
 | **Microsoft Azure AD** | 🔧 Pronto | 5400 | `openid profile email User.Read` | OIDC completo |
@@ -235,13 +235,13 @@ OIDC_VERIFY_SSL=true
 OIDC_TOKEN_LEEWAY=60
 
 # =============================================================================
-# KEYCLOAK (TJDFT)
+# KEYCLOAK 
 # =============================================================================
 KEYCLOAK_ISSUER_URL=https://sso.apps.alcoal.net.br/auth/realms/SUDES
 KEYCLOAK_CLIENT_ID=seu-client-id
 KEYCLOAK_CLIENT_SECRET=seu-client-secret
 KEYCLOAK_REDIRECT_URI=http://localhost:5400/callback
-KEYCLOAK_SCOPES=openid profile email tjdft_profile
+KEYCLOAK_SCOPES=openid profile email
 
 # =============================================================================
 # GOOGLE OAUTH
